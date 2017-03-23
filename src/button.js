@@ -30,7 +30,7 @@
      *
      * @type {boolean}
      */
-    WASHAREBTN.prototype.isIos = ((navigator.userAgent.match(/Android|iPhone/i) && !navigator.userAgent.match(/iPod|iPad/i)) ? true : false);
+    WASHAREBTN.prototype.isIos = (navigator.userAgent.match(/Android|iPhone/i) && !navigator.userAgent.match(/iPod|iPad/i));
 
     /**
      * Call a function when the content is loaded and the document is ready.
@@ -81,24 +81,6 @@
             doc[add](pre + "readystatechange", init, false);
             win[add](pre + "load", init, false);
         }
-    };
-
-    /**
-     * Returns CSS style element.
-     *
-     * @returns {HTMLElement}
-     */
-    WASHAREBTN.prototype.addStyling = function () {
-        var s = document.createElement("style"),
-            c = "[[minified_css]]";
-
-        s.type = "text/css";
-        if (s.styleSheet) {
-            s.styleSheet.cssText = c;
-        } else {
-            s.appendChild(document.createTextNode(c));
-        }
-        return s;
     };
 
     /**
@@ -154,7 +136,6 @@
     WASHAREBTN.prototype.iFrameOnload = function () {
         return function () {
             this.contentDocument.body.appendChild(this.button);
-            this.contentDocument.getElementsByTagName('head')[0].appendChild(root.WASHAREBTN.addStyling());
 
             var meta = document.createElement('meta');
             meta.setAttribute('charset', 'utf-8');
