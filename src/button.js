@@ -21,7 +21,9 @@
         this.buttons = [];
 
         if (this.isMobile === true) {
-            this.cntLdd(window, this.crBtn);
+            this.contentLoaded(this.crBtn);
+        } else {
+            this.removeButtons();
         }
     };
 
@@ -32,27 +34,31 @@
      */
     WASHAREBTN.prototype.isMobile = (navigator.userAgent.match(/Android|iPhone/i) && !navigator.userAgent.match(/iPod|iPad/i));
 
+    WASHAREBTN.prototype.removeButtons = function() {
+        var b = [].slice.call(document.querySelectorAll(".wa_btn"));
+
+        for (var i = 0; i < b.length; i++) {
+            b[i].parentNode.removeChild(b[i]);
+        }
+    };
+
     /**
      * Call a function when the content is loaded and the document is ready.
      *
-     * @param win
      * @param fn
      */
-    WASHAREBTN.prototype.cntLdd = function (win, fn) {
+    WASHAREBTN.prototype.contentLoaded = function (fn) {
         var done = false,
             top = true,
-            doc = win.document,
+            doc = window.document,
             root = doc.documentElement,
-            add = doc.addEventListener ? "addEventListener" : "attachEvent",
-            rem = doc.addEventListener ? "removeEventListener" : "detachEvent",
-            pre = doc.addEventListener ? "" : "on",
             init = function (e) {
                 if (e.type === "readystatechange" && doc.readyState !== "complete") {
                     return;
                 }
-                (e.type === "load" ? win : doc)[rem](pre + e.type, init, false);
+                (e.type === "load" ? window : doc)[removeEventListener](e.type, init, false);
                 if (!done && (done = true)) {
-                    fn.call(win, e.type || e);
+                    fn.call(window, e.type || e);
                 }
             },
             poll = function () {
@@ -66,20 +72,20 @@
             };
 
         if (doc.readyState === "complete") {
-            fn.call(win, "lazy");
+            fn.call(window, "lazy");
         } else {
             if (doc.createEventObject && root.doScroll) {
                 try {
-                    top = !win.frameElement;
+                    top = !window.frameElement;
                 } catch (e) {
                 }
                 if (top) {
                     poll();
                 }
             }
-            doc[add](pre + "DOMContentLoaded", init, false);
-            doc[add](pre + "readystatechange", init, false);
-            win[add](pre + "load", init, false);
+            doc.addEventListener("DOMContentLoaded", init, false);
+            doc.addEventListener("readystatechange", init, false);
+            window.addEventListener("load", init, false);
         }
     };
 
