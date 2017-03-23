@@ -56,7 +56,7 @@
                 if (e.type === "readystatechange" && doc.readyState !== "complete") {
                     return;
                 }
-                (e.type === "load" ? window : doc)[removeEventListener](e.type, init, false);
+                (e.type === "load" ? window : doc)['removeEventListener'](e.type, init, false);
                 if (!done && (done = true)) {
                     fn.call(window, e.type || e);
                 }
