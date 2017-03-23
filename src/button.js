@@ -20,7 +20,7 @@
     var WASHAREBTN = function () {
         this.buttons = [];
 
-        if (this.isIos === true) {
+        if (this.isMobile === true) {
             this.cntLdd(window, this.crBtn);
         }
     };
@@ -30,7 +30,7 @@
      *
      * @type {boolean}
      */
-    WASHAREBTN.prototype.isIos = (navigator.userAgent.match(/Android|iPhone/i) && !navigator.userAgent.match(/iPod|iPad/i));
+    WASHAREBTN.prototype.isMobile = (navigator.userAgent.match(/Android|iPhone/i) && !navigator.userAgent.match(/iPod|iPad/i));
 
     /**
      * Call a function when the content is loaded and the document is ready.
@@ -106,60 +106,17 @@
         return b;
     };
 
-    /**
-     * Accepts a button and creates an iframe element around it.
-     * Adds an EventListener to append the button after the iframe was inserted in the DOM.
-     *
-     * @param b
-     * @returns {HTMLElement}
-     */
-    WASHAREBTN.prototype.setIframeAttributes = function (b) {
-        var i = document.createElement('iframe');
-
-        i.width = 1;
-        i.height = 1;
-        i.button = b;
-        i.style.border = 0;
-        i.style.overflow = "hidden";
-        i.border = 0;
-
-        i.setAttribute("scrolling", "no");
-        i.addEventListener('load', root.WASHAREBTN.iFrameOnload());
-
-        return i;
-    };
-
-    /**
-     * This function is toggled after the iframe was successfully inserted in the DOM.
-     * The button element as well as the style element are appended to the iframe.
-     */
-    WASHAREBTN.prototype.iFrameOnload = function () {
-        return function () {
-            this.contentDocument.body.appendChild(this.button);
-
-            var meta = document.createElement('meta');
-            meta.setAttribute('charset', 'utf-8');
-            this.contentDocument.getElementsByTagName('head')[0].appendChild(meta);
-
-            this.width = Math.ceil(this.contentDocument.getElementsByTagName('a')[0].getBoundingClientRect().width);
-            this.height = Math.ceil(this.contentDocument.getElementsByTagName('a')[0].getBoundingClientRect().height);
-        };
-    };
 
     /**
      * Create WASHAREBTNS from all elements with the className wa_btn.
      */
     WASHAREBTN.prototype.crBtn = function () {
         var b = [].slice.call(document.querySelectorAll(".wa_btn"));
-        var iframes = [];
 
         for (var i = 0; i < b.length; i++) {
             root.WASHAREBTN.buttons.push(b[i]);
 
             b[i] = root.WASHAREBTN.setButtonAttributes(b[i]);
-            iframes[i] = root.WASHAREBTN.setIframeAttributes(b[i]);
-
-            b[i].parentNode.insertBefore(iframes[i], b[i]);
         }
     };
 
